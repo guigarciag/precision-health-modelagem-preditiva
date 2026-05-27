@@ -1,62 +1,76 @@
-# Projeto de Previsão de No-show em Consultas Médicas
+# PREDICTIVE HEALTHCARE APPOINTMENT NO-SHOWS
 
-## Visão Geral
-Este projeto tem como objetivo desenvolver um modelo de Machine Learning para prever se um paciente irá ou não comparecer a uma consulta médica (`no-show`). A análise explora diversos fatores que podem influenciar o `no-show` e utiliza modelagem dimensional para estruturar os dados.
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
+![Scikit-Learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)
+![Google Colab](https://img.shields.io/badge/Google%20Colab-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white)
+![Status](https://img.shields.io/badge/STATUS-CONCLUÍDO-green?style=for-the-badge)
 
-## Estrutura do Projeto
-```
-project_root/
-├── notebooks/
-│   └── <seu_notebook>.ipynb  (Este arquivo)
-├── models/
-│   └── modelo_final.joblib   (Modelo treinado exportado)
-├── requirements.txt         (Dependências do projeto)
-└── README.md                (Este arquivo)
-```
+## 📌 Descrição do Projeto
+Este projeto foi desenvolvido como parte da disciplina de **Projeto Final de Engenharia de Computação**. A solução aborda o problema do impacto financeiro e operacional causado por faltas de pacientes a consultas agendadas, utilizando um pipeline completo de Engenharia de Dados, Análise Estatística, Machine Learning e Business Intelligence para prever a probabilidade de absenteísmo (*no-show*).
 
-## Como Executar o Projeto
+---
 
-1.  **Clone o repositório:**
-    ```bash
-    git clone <URL_DO_SEU_REPOSITORIO>
-    cd <nome_do_repositorio>
-    ```
+## 👥 Equipe
+* **Guilherme Gonçalves Garcia** - RA: 082210014
+* **Lohan Batista Moreira** - RA: 082210035
+* **Paulo Henrique dos Santos Tristão** - RA: 082210017
+* **Rodrigo Puertas Matioli** - RA: 082210037
 
-2.  **Crie e ative um ambiente virtual (recomendado):**
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # No Windows: .env\Scriptsctivate
-    ```
+---
 
-3.  **Instale as dependências:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+## 🚀 Entregas e Metodologia
 
-4.  **Execute o Notebook:**
-    Abra o arquivo `.ipynb` na pasta `notebooks/` em um ambiente como Jupyter Notebook ou Google Colab e execute todas as células para reproduzir a análise e o treinamento do modelo.
+### M1: Data Engineering (Pipeline ETL)
+Estruturação de um pipeline robusto para consumo do dataset de análise de tempo de espera e no-show na saúde via `kagglehub`.
+* **Arquitetura:** Implementação de **Star Schema** envolvendo a tabela de fatos `Fact_Appointments` e as dimensões `Dim_Patient`, `Dim_Date`, `Dim_Time`, `Dim_Doctor` e `Dim_Clinic`.
+* **Armazenamento:** Estrutura com injeção de metadados temporais de controle ETL (`etl_load_tms`, `etl_updt_tms`, `etl_row_id`) executada no ambiente do Google Colab.
+* **Tecnologias:** Python, Pandas, Google Colab.
 
-## Modelagem Dimensional
-Os dados foram estruturados em um Star Schema, composto por:
-*   **Tabela de Fatos:** `Fact_Appointments`
-*   **Tabelas de Dimensão:** `Dim_Patient`, `Dim_Date`, `Dim_Time`, `Dim_Doctor`, `Dim_Clinic`
+### M2: Exploratory Data Analysis (EDA)
+Exploração estatística para validação de hipóteses e inteligência de dados.
+* **Análise Univariada/Multivariada:** Identificação de forte assimetria positiva na variável de tempo de espera, com mediana de 88.0 minutos e média de 90.19 minutos. A taxa global de no-show identificada na base de dados é de aproximadamente 23.07%.
+* **Correlação:** Avaliação de fatores de impacto categóricos e numéricos em relação à variável alvo `no_show_flag`.
+* **Insight Chave:** O histórico do paciente é o indicador mais forte: a taxa de no-show cresce de maneira linear e consistente à medida que o número de faltas anteriores (`previous_no_shows`) aumenta. Adicionalmente, o envio de lembretes reduz drasticamente o absenteísmo (21.6% de no-show para quem recebeu vs 28.5% para quem não recebeu).
 
-## Análise Exploratória de Dados (EDA)
-Foram realizadas análises para entender a distribuição das variáveis e a relação com a taxa de `no-show`. Principais insights:
-*   `previous_no_shows`: Forte preditor de `no-show`.
-*   `reminder_sent`: Lembretes reduziram a taxa de `no-show`.
-*   `patient_age` e `waiting_time_minutes`: Influência notável na taxa de `no-show`.
+### M3: Modelagem Preditiva (Machine Learning)
+Desenvolvimento de modelos para Classificação da variável `no_show_flag`.
 
-## Modelagem Preditiva
-Foram treinados e avaliados os seguintes modelos de classificação para prever o `no_show_flag`:
-*   Regressão Logística
-*   Random Forest Classifier
-*   Gradient Boosting Classifier
+| Modelo | Acurácia/R² | F1-Score / RMSE | Status |
+| :--- | :--- | :--- | :--- |
+| Regressão Logística | 0.77 | 0.00 | Testado |
+| Random Forest | 0.76 | 0.03 | Testado |
+| Gradient Boosting (Original) | 0.77 | 0.02 | Testado |
+| Gradient Boosting (Otimizado) | 0.77 | 0.05 | **Final** |
 
-O modelo de **Gradient Boosting Classifier** foi selecionado como o modelo final devido ao seu desempenho ligeiramente superior nas métricas de avaliação, especialmente o AUC-ROC, para o desafio de prever `no-show` com dados desbalanceados.
+* **Vencedor:** O algoritmo **Gradient Boosting Classifier** foi escolhido como modelo final. Contudo, a análise de estresse e o veredicto estratégico apontaram um *ponto cego logístico*: os modelos de comportamento histórico atuam como um espelho retrovisor e são insuficientes por si só para sustentar decisões automatizadas de *overbooking* sem a inclusão de determinantes externos em tempo real (como tráfego urbano e microlocalização).
 
-## Integrantes
-*   Guilherme Gonçalves Garcia
-*   Lohan Batista Moreira
-*   Paulo Henrique dos Santos Tristão
-*   Rodrigo Puertas Matioli
+### M4: Business Insights & GenAI
+
+---
+
+## 📺 Apresentação e Demonstração
+
+Para uma visão completa da solução, acesse os links abaixo:
+
+> 🎥 **[ASSISTIR AO VÍDEO DO PITCH (2 MIN)](LINK_DO_VIDEO_AQUI)**
+> *Resumo do tema, problema, metodologia e solução final.*
+
+> 🤖 **[ACESSAR AGENTE DE INSIGHTS - GOOGLE AI STUDIO](LINK_DO_STUDIO_AQUI)**
+> *Interaja com a nossa IA treinada para analisar os dados deste projeto.*
+
+---
+
+## 🛠️ Como Reproduzir
+1. Clone o repositório: `git clone [URL_DO_REPO]`
+2. Instale as dependências: `pip install -r requirements.txt`
+3. Abra os notebooks na pasta `/notebooks` via Google Colab.
+4. Certifique-se de configurar o caminho do Google Drive para a leitura dos arquivos em `/data`.
+
+---
+
+<p align="center">
+  <img src="https://faculdadesalvadorarena.org.br/wp-content/uploads/2022/07/logo_fesa.png" width="200" alt="Logo Faculdade Engenheiro Salvador Arena"><br>
+  <b>Faculdade Engenheiro Salvador Arena</b><br>
+  Curso de Engenharia de Computação | Março de 2026
+</p>
