@@ -56,7 +56,7 @@ Para uma visão completa da solução, acesse os links abaixo:
 > 🎥 **[ASSISTIR AO VÍDEO DO PITCH (2 MIN)](LINK_DO_VIDEO_AQUI)**
 > *Resumo do tema, problema, metodologia e solução final.*
 
-> 🤖 **[ACESSAR AGENTE DE INSIGHTS - GOOGLE AI STUDIO](LINK_DO_STUDIO_AQUI)**
+> 🤖 **[ACESSAR AGENTE DE INSIGHTS - GOOGLE AI STUDIO](https://ai.studio/apps/a7020c43-a39a-492b-a656-92949a4cd4fa)**
 > *Interaja com a nossa IA treinada para analisar os dados deste projeto.*
 
 ---
